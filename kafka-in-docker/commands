@@ -1,0 +1,10 @@
+ docker stop  $(docker container ls -aq) -t 0 && docker container prune && docker build . -t kafka:2.6 &&  docker run -p 9092:9092 --name kafka-broker kafka:2.6
+
+
+
+
+$ docker stop  $(docker container ls -aq) -t 0 
+$ docker container prune
+
+$ docker build . -t kafka-zherro:2.6
+$ docker run -p 9092:9092 --name kafka-in-docker kafka-zherro:2.6

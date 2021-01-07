@@ -1,0 +1,24 @@
+# WARNING: This docker-compose.yml is only for testing purpose.
+# This docker-compose rum unic kafka image
+
+# reference: https://github.com/zherro/kafka
+#
+# Ports:
+# - description: Major ports are exposed to host computer
+# - zookeeper: 2181
+#      kafka: 9092
+
+version: '3.5'
+services:
+  kafka2:
+    image: kafka-zherro:2.6
+    ports:
+    - "2181:2181"
+    - "9092:9092"
+    networks:
+    - backend
+networks:
+  backend:
+    name: custom_frontend
+    driver: bridge
+    external: true
