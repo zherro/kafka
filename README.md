@@ -31,6 +31,92 @@ $ bin/kafka-server-start.sh config/server.properties
 
 Once all services have successfully launched, you will have a basic Kafka environment running and ready to use
 
+By default:
+- kafka is served in: `localhost:9092`
+- zookeper is served in: `localhost:2181`
+
 > If executing in Windows S.O., use files of `bin/windows/...`. This provide best execution.
 
+
+
+
+### Topics
+
+Events are organized and durably stored in topics. Very simplified, a topic is similar to a folder in a filesystem, and the events are the files in that folder. An example topic name could be "payments". Topics in Kafka are always multi-producer and multi-subscriber: a topic can have zero, one, or many producers that write events to it, as well as zero, one, or many consumers that subscribe to these events. Events in a topic can be read as often as needed—unlike traditional messaging systems, events are not deleted after consumption. Instead, you define for how long Kafka should retain your events through a per-topic configuration setting, after which old events will be discarded. Kafka's performance is effectively constant with respect to data size, so storing data for a long time is perfectly fine.
+
+So before you can write your first events, you must create a topic. Open another terminal session and run:
+
+```
+$ bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server localhost:9092
+```
+
+> here create topic with name `quickstart-events`.
+
+Note that we use file `bin/kafka-topics.sh`, for execute topic commands. And define the kafka server `--bootstrap-server localhost:9092`.
+
+
+### Topic Utils
+
+- `create`: Create a new topic.                    
+- `delete`: Delete a topic    
+- `alter`: Alter the number of partitions, replica assignment, and/or configuration for the topic.
+- `if-not-exists`: if set when creating topics, the action will only execute if the topic does not already exist.
+- `list`: List all available topics.             
+- `describe`: List details for the given topics.
+- `partitions <Integer: # of partitions>`: The number of partitions for the topic being created or altered (WARNING:   If partitions are increased for a    topic that has a key, the partition  logic or ordering of the messages    will be affected). If not supplied   for create, defaults to the cluster  default.
+- `replication-factor <Integer:  The replication factor for each  replication factor>` : partition in the topic being  created. If not supplied, defaults to the cluster default.
+
+```
+----------------------
+
+$ bin/kafka-topics.sh --create --if-not-exists  --topic quickstart-events --bootstrap-server localhost:9092
+
+# result:
+Create topic if not exists and not throw an excepiion if exists.
+
+----------------------
+
+$ bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+
+# result:
+quickstart-events
+
+----------------------
+
+$  bin/kafka-topics.sh --describe --topic quickstart-events --bootstrap-server localhost:9092
+
+# result:
+Topic: quickstart-events	PartitionCount: 1	ReplicationFactor: 1	Configs: segment.bytes=1073741824
+    Topic: quickstart-events	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+
+----------------------
+
+$ bin/kafka-topics.sh --create --if-not-exists  --topic quickstart-events2 --bootstrap-server localhost:9092 --partitions 3
+
+# result:
+Created topic quickstart-events2.
+
+
+
+>>> OR ALTER TOPIC <<<
+
+$ bin/kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic quickstart-events   --partitions 5
+
+
+
+>>> CHECK TOPIC INFO <<<
+
+$  bin/kafka-topics.sh --describe --topic quickstart-events2 --bootstrap-server localhost:9092
+
+# result:
+Topic: quickstart-events2	PartitionCount: 3	ReplicationFactor: 1	Configs: segment.bytes=1073741824
+	Topic: quickstart-events2	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+	Topic: quickstart-events2	Partition: 1	Leader: 0	Replicas: 0	Isr: 0
+	Topic: quickstart-events2	Partition: 2	Leader: 0	Replicas: 0	Isr: 0
+
+# Note that now we have three partitions.
+
+----------------------
+
+```
 
