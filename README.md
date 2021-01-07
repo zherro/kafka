@@ -66,8 +66,11 @@ Note that we use file `bin/kafka-topics.sh`, for execute topic commands. And def
 - `partitions <Integer: # of partitions>`: The number of partitions for the topic being created or altered (WARNING:   If partitions are increased for a    topic that has a key, the partition  logic or ordering of the messages    will be affected). If not supplied   for create, defaults to the cluster  default.
 - `replication-factor <Integer:  The replication factor for each  replication factor>` : partition in the topic being  created. If not supplied, defaults to the cluster default.
 
+**In action:**
+
 ```
 ----------------------
+>>> CREATE <<<
 
 $ bin/kafka-topics.sh --create --if-not-exists  --topic quickstart-events --bootstrap-server localhost:9092
 
@@ -75,6 +78,7 @@ $ bin/kafka-topics.sh --create --if-not-exists  --topic quickstart-events --boot
 Create topic if not exists and not throw an excepiion if exists.
 
 ----------------------
+>>> LIST <<<
 
 $ bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 
@@ -82,6 +86,7 @@ $ bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 quickstart-events
 
 ----------------------
+>>> GET INFO <<<
 
 $  bin/kafka-topics.sh --describe --topic quickstart-events --bootstrap-server localhost:9092
 
@@ -90,6 +95,7 @@ Topic: quickstart-events	PartitionCount: 1	ReplicationFactor: 1	Configs: segment
     Topic: quickstart-events	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
 
 ----------------------
+>>> CREATE IF NOT EXIST <<<
 
 $ bin/kafka-topics.sh --create --if-not-exists  --topic quickstart-events2 --bootstrap-server localhost:9092 --partitions 3
 
@@ -117,6 +123,26 @@ Topic: quickstart-events2	PartitionCount: 3	ReplicationFactor: 1	Configs: segmen
 # Note that now we have three partitions.
 
 ----------------------
+>>> DELETE <<<
+
+
+$ bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+
+# result:
+quickstart-events
+quickstart-events2
+
+
+$ bin/kafka-topics.sh --delete --topic quickstart-events2 --bootstrap-server localhost:9092
+
+# result:
+
+
+$ bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+
+# result:
+quickstart-events
+
 
 ```
 
