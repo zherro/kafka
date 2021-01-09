@@ -1,0 +1,52 @@
+# build image
+
+$ docker build . -t kafka-zherro_v2
+
+$ docker rm $(docker stop $(docker ps -a -q -f "name=kafka-cluster-in-docker"))
+
+$ docker-compose rm -f && docker-compose up
+
+
+
+$ docker build . -t kafka-zherro_v2 && docker rm $(docker stop $(docker ps -a -q -f "name=kafka-cluster-in-docker")) && docker-compose rm -f && docker-compose up
+
+$ docker run -p 9092:9092  --env ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 --env KAFKA_CREATE_TOPICS="test:36:1,krisgeus:12:1:compact"  --name kafka-zherro_v2 kafka-zherro_v2:2.6
+
+
+
+
+  kafka3:
+    image: kafka-zherro_v2:latest
+    ports:
+    - "9093:9093"
+    depends_on:
+    - zoo1
+    - zoo2
+    - zoo3
+    - kafka2
+    environment:
+      BROKER_ID: 3
+      REPLICATION_FACTOR: 3
+      LISTENERS: PLAINTEXT://:9093
+      ADVERTISED_LISTENERS: PLAINTEXT://localhost:9093
+      ZOOKEEPER: zoo1:2181,zoo2:2181,zoo3:2181
+    networks:
+    - backend
+    
+    
+    
+
+docker stop  $(docker container ls -aq) -t 0 && docker container prune kafka-zherro:2.6 && docker build . -t kafka-zherro:2.6 &&  docker run -p 9092:9092  --env ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 --env KAFKA_CREATE_TOPICS="test:36:1,krisgeus:12:1:compact"  --name kafka-broker kafka-zherro:2.6 
+
+
+
+docker stop  $(docker container ls -aq) -t 0 && docker container prune kafka-zherro:2.6 && docker build . -t kafka-zherro:2.6 &&  docker run -p 9092:9092  --env ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 --env KAFKA_CREATE_TOPICS="test:36:1,krisgeus:12:1:compact"  --name kafka-broker kafka-zherro:2.6 
+
+
+
+
+docker stop kafka-zhero && docker container prune kafka-zherro:2.6 && docker build . -t kafka-zherro:2.6 &&  docker run -p 9092:9092  --env ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 --env KAFKA_CREATE_TOPICS="test:36:1,krisgeus:12:1:compact"  --name kafka-zhero kafka-zherro:2.6 
+
+
+
+docker stop  kafka-zhero && docker container prune kafka-zherro:2.6 && docker build . -t kafka-zherro:2.6 &&  docker run -p 9092:9092  --env ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 --env KAFKA_CREATE_TOPICS="test:36:1,krisgeus:12:1:compact"  --name kafka-zhero kafka-zherro:2.6 

@@ -1,0 +1,103 @@
+# WARNING: This docker-compose.yml is only for testing purpose.
+# Parameters:
+# - name: CONFLUENT_PLATFORM_VERSION
+#   default: 3.0.0
+#   reference: https://hub.docker.com/u/confluentinc/
+# Ports:
+# - description: Major ports are exposed to host computer
+# - zookeeper: 2181
+#      kafka1: 9091
+#      kafka2: 9092
+#      kafka3: 9093
+#      kafka4: 9094
+#      kafka5: 9095
+# Tips:>
+#   - You can up part of the cluster with below command.
+#     $ docker-compose up -d kafka1 kafka2 kafka3
+
+version: '3.5'
+services:
+  zoo1:
+    image: zookeeper
+    restart: always
+    hostname: zoo1
+    ports:
+      - 2181:2181
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+    networks:
+    - backend
+
+  zoo2:
+    image: zookeeper
+    restart: always
+    hostname: zoo2
+    ports:
+      - 2182:2181
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=0.0.0.0:2888:3888;2181 server.3=zoo3:2888:3888;2181
+    networks:
+    - backend
+  zoo3:
+    image: zookeeper
+    restart: always
+    hostname: zoo3
+    ports:
+      - 2183:2181
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=0.0.0.0:2888:3888;2181
+    networks:
+    - backend
+
+  kafka1:
+    image: kafka-zherro_v2:latest
+    hostname: kafka1
+    ports:
+#    - "2181:2181"
+    - "9091:9091"
+    depends_on:
+    - zoo1
+    - zoo2
+    - zoo3
+    environment:
+      BROKER_ID: 1
+      REPLICATION_FACTOR: 3
+      HOST_PORT: 9091
+      LISTENERS: PLAINTEXT_EXTERNAL://:9091,PLAINTEXT_INTERNAL://:19091
+      ADVERTISED_LISTENERS: PLAINTEXT_EXTERNAL://localhost:9091,PLAINTEXT_INTERNAL://kafka1:19091
+      ZOOKEEPER: zoo1:2181
+    networks:
+    - backend
+
+  kafka2:
+    image: kafka-zherro_v2:latest
+    hostname: kafka2
+    ports:
+    - "9092:9092"
+    depends_on:
+    - zoo1
+    - zoo2
+    - zoo3
+    environment:
+      BROKER_ID: 2
+      REPLICATION_FACTOR: 3
+      HOST_PORT: 9092
+      LISTENERS: PLAINTEXT_EXTERNAL://:9092,PLAINTEXT_INTERNAL://:19092
+      ADVERTISED_LISTENERS: PLAINTEXT_EXTERNAL://localhost:9092,PLAINTEXT_INTERNAL://kafka2:19092
+      ZOOKEEPER: zoo1:2181
+      KAFKA_CREATE_TOPICS: test:36:1
+    networks:
+    - backend
+
+networks:
+  backend:
+    name: backend
+    driver: bridge
+    external: false
+
+
+
+
