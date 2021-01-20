@@ -144,8 +144,7 @@ if [ ! -z "$INTER_BROKER_LISTENER_NAME" ]; then
         echo "inter.broker.listener.name=${INTER_BROKER_LISTENER_NAME}" >> config/server.properties
     fi
 else
-    echo "inter.broker.listener.name: PLAINTEXT_INTERNAL"
-    LISTENER_SECURITY_PROTOCOL_MAP 
+    echo "inter.broker.listener.name: PLAINTEXT_INTERNAL" 
     if grep -r -q "^#\?inter.broker.listener.name=" config/server.properties; then
         # use | as a delimiter to make sure // does not confuse sed
         sed -r -i "s|^#?(inter.broker.listener.name)=(.*)|\1=PLAINTEXT_INTERNAL|g" config/server.properties

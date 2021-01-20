@@ -68,7 +68,7 @@ services:
       HOST_PORT: 9091
       LISTENERS: PLAINTEXT_EXTERNAL://:9091,PLAINTEXT_INTERNAL://:19091
       ADVERTISED_LISTENERS: PLAINTEXT_EXTERNAL://localhost:9091,PLAINTEXT_INTERNAL://kafka1:19091
-      ZOOKEEPER: zoo1:2181
+      ZOOKEEPER: zoo1:2181,zoo1:2182,zoo1:2183
     networks:
     - backend
 
@@ -87,7 +87,27 @@ services:
       HOST_PORT: 9092
       LISTENERS: PLAINTEXT_EXTERNAL://:9092,PLAINTEXT_INTERNAL://:19092
       ADVERTISED_LISTENERS: PLAINTEXT_EXTERNAL://localhost:9092,PLAINTEXT_INTERNAL://kafka2:19092
-      ZOOKEEPER: zoo1:2181
+      ZOOKEEPER: zoo1:2181,zoo1:2182,zoo1:2183
+      KAFKA_CREATE_TOPICS: test:36:1
+    networks:
+    - backend
+
+  kafka3:
+    image: kafka-zherro_v2:latest
+    hostname: kafka3
+    ports:
+    - "9093:9093"
+    depends_on:
+    - zoo1
+    - zoo2
+    - zoo3
+    environment:
+      BROKER_ID: 3
+      REPLICATION_FACTOR: 3
+      HOST_PORT: 9093
+      LISTENERS: PLAINTEXT_EXTERNAL://:9093,PLAINTEXT_INTERNAL://:19093
+      ADVERTISED_LISTENERS: PLAINTEXT_EXTERNAL://localhost:9093,PLAINTEXT_INTERNAL://kafka3:19093
+      ZOOKEEPER: zoo1:2181,zoo1:2182,zoo1:2183
       KAFKA_CREATE_TOPICS: test:36:1
     networks:
     - backend

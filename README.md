@@ -243,3 +243,59 @@ $ docker run -p 9092:9092 --name kafka-in-docker kafka-zherro:2.6
 ```
 
 > Note that it creates de docker image with name `kafka-zherro:2.6` and run container whith name `kafka-in-docker`, respectively.
+
+
+# Kafka cluster
+
+> Project `kafka-cluster-in-docker`
+
+
+## build image and run images of kafka cluster
+
+> The commands down needs run into kafka-cluster-in-docker folder
+
+```
+# build kafka docker image
+
+$ docker build . -t kafka-zherro_v2
+
+```
+
+
+```
+# stop all container od kafka cluster kafka and remove it's
+
+$ docker rm $(docker stop $(docker ps -a -q -f "name=kafka-cluster-in-docker"))
+```
+
+
+```
+# run docker compose to up kafka contqainers
+
+$ docker-compose rm -f && docker-compose up
+```
+
+## Files
+
+### start.sh
+
+This file is executed when de container run. Replacing de kafka server.properties configuratios for start the kafka server.
+
+
+## kafka configurations for running in cluster
+
+**All kafka servers listen the Zookeeper servers**
+
+The Zookeeper garants that replication and  configurations will be applied. 
+
+When use three Zookeeper servers, if one falls the even others two zookeeper's continue  applying the configurations and replications in all kafka servers registered.
+
+## How use kafka server in cluster
+
+For connect to kafka server in cluster, inform all kafka servers to boostrap-sever by comma separated.
+
+```
+# example
+
+bootstrap-servers: 127.0.0.1:9091,127.0.0.1:9092,127.0.0.1:9093
+```

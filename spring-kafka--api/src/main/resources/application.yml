@@ -1,0 +1,25 @@
+# server: port: 9000
+spring:
+  kafka:
+    partitions: 6
+    replica: 3
+    bootstrap-servers: 127.0.0.1:9091,127.0.0.1:9092,127.0.0.1:9093
+    consumer:
+      order:
+        send: ORDERS
+        status: ORDER_STATUS_SERVICE
+    producer:
+      order:
+        create: ORDERS
+      bootstrap-servers: ${spring.kafka.bootstrap-servers}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#  datasource:
+#    url: jdbc:h2:mem:orders
+#    driverClassName: org.h2.Driver
+#    username: sa
+#    password:
+#
+#  jpa:
+#    .database-platform=org.hibernate.dialect.H2Dialect
+
